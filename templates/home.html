@@ -1,3 +1,269 @@
-<h1>
-    "hello world"
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>California Housing Price Predictor</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            width: 450px;
+            transition: box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .form-container:hover {
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 15px;
+            color: #34495e;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            box-sizing: border-box;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        input[type="number"]:hover,
+        input[type="number"]:focus {
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.1);
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            margin-top: 25px;
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .form-container {
+            background-color: #3b4a59;
+            color: #ecf0f1;
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .form-container:hover {
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode label {
+            color: #d1d8e0;
+        }
+
+        body.dark-mode input[type="number"] {
+            background-color: #2c3a47;
+            border: 1px solid #57606f;
+            color: #ecf0f1;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.05);
+        }
+
+        body.dark-mode input[type="number"]:hover,
+        body.dark-mode input[type="number"]:focus {
+            box-shadow: inset 0 2px 8px rgba(255,255,255,0.1);
+            border-color: #3498db;
+            outline: none;
+            background-color: #34495e;
+        }
+
+        body.dark-mode button {
+            background-color: #2980b9;
+        }
+
+        body.dark-mode button:hover {
+            background-color: #1c5980;
+        }
+
+        /* Dark mode toggle styles */
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 450px;
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #34495e;
+            user-select: none;
+        }
+
+        body.dark-mode .toggle-container {
+            color: #ecf0f1;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 10px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Prediction text styling */
+        .prediction-text {
+            margin-top: 20px;
+            padding: 15px 20px;
+            background-color: #dff0d8;
+            border: 1px solid #3c763d;
+            border-radius: 8px;
+            color: #3c763d;
+            font-weight: 700;
+            font-size: 18px;
+            text-align: center;
+            max-width: 450px;
+            word-wrap: break-word;
+        }
+
+        body.dark-mode .prediction-text {
+            background-color: #2e4a2e;
+            border-color: #5cb85c;
+            color: #a9d18e;
+        }
+    </style>
+</head>
+<body>
+    <div class="toggle-container">
+        Dark Mode
+        <label class="switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div class="form-container">
+        <h2>Predict Housing Price</h2>
+        <form action="{{ url_for('predict') }}" method="post">
+            <label for="MedInc">Median Income</label>
+            <input type="number" step="any" name="MedInc" required>
+
+            <label for="HouseAge">House Age</label>
+            <input type="number" step="any" name="HouseAge" required>
+
+            <label for="AveRooms">Average Rooms</label>
+            <input type="number" step="any" name="AveRooms" required>
+
+            <label for="AveBedrms">Average Bedrooms</label>
+            <input type="number" step="any" name="AveBedrms" required>
+
+            <label for="Population">Population</label>
+            <input type="number" step="any" name="Population" required>
+
+            <label for="AveOccup">Average Occupancy</label>
+            <input type="number" step="any" name="AveOccup" required>
+
+            <label for="Latitude">Latitude</label>
+            <input type="number" step="any" name="Latitude" required>
+
+            <label for="Longitude">Longitude</label>
+            <input type="number" step="any" name="Longitude" required>
+
+            <button type="submit">Predict Price</button>
+        </form>
+    </div>
+    {% if prediction_text %}
+    <div class="prediction-text">{{ prediction_text }}</div>
+    {% endif %}
+
+    <script>
+        const toggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+
+        // Load saved mode from localStorage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            toggle.checked = true;
+        }
+
+        toggle.addEventListener('change', () => {
+            if (toggle.checked) {
+                body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>
