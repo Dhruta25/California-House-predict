@@ -4,7 +4,6 @@ import pickle
 
 app = Flask(__name__)
 
-# Load model and scaler
 with open("regmodel.pkl", "rb") as f:
     regmodel = pickle.load(f)
 
