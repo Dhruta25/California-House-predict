@@ -1,0 +1,52 @@
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.templating import Jinja2Templates
+import numpy as np
+import pickle
+import uvicorn
+
+app = FastAPI()
+
+# Load templates (home.html should be inside a "templates" folder)
+templates = Jinja2Templates(directory="templates")
+
+# Load model and scaler
+with open("regmodel.pkl", "rb") as f:
+    regmodel = pickle.load(f)
+
+with open("scaler.pkl", "rb") as f:
+    scaler = pickle.load(f)
+
+
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    """Render the home page"""
+    return templates.TemplateResponse("home.html", {"request": request})
+
+
+@app.post("/predict_api")
+async def predict_api(request: Request):
+    """Handle JSON-based prediction requests"""
+    data = await request.json()
+    data = data["data"]  # must be a dict
+    input_array = np.array(list(data.values())).reshape(1, -1)
+    new_data = scaler.transform(input_array)
+    output = regmodel.predict(new_data)
+    return JSONResponse(content={"predicted_price": float(output[0])})
+
+
+@app.post("/predict", response_class=HTMLResponse)
+async def predict(request: Request):
+    """Handle form submission (from home.html)"""
+    form = await request.form()
+    data = [float(x) for x in form.values()]
+    final_input = scaler.transform(np.array(data).reshape(1, -1))
+    output = regmodel.predict(final_input)[0]
+    return templates.TemplateResponse(
+        "home.html",
+        {"request": request, "prediction_text": f"The predicted price is {output}"}
+    )
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=5000, debug=True)
