@@ -4,3 +4,7 @@ pandas
 numpy
 matplotlib
 gunicorn
+fastapi
+uvicorn
+jinja2
+pickle-mixin
